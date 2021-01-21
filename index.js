@@ -4,6 +4,9 @@ const express = require('express')
 const app = express()
 const AWS = require('aws-sdk');
 
+const request = require("request");
+const { json } = require('body-parser');
+
 
 const USERS_TABLE = process.env.USERS_TABLE;
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
@@ -11,7 +14,22 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 app.use(bodyParser.json({ strict: false }));
 
 app.get('/', function (req, res) {
-  res.send('Hello World!')
+  //res.send('Hello World!')
+
+  request("https://swapi.py4e.com/api/people/?page=2&format=json", function(err, response , body){
+      if (err)  {
+        res.err(err)
+      } else {
+        res.json(body)
+        /**
+         * 
+        var persons = []
+        body.result.forEach(element => {
+          persons.push({nombre:element.name})
+        });
+         */
+      }
+  })
 })
 
 // Get User endpoint
